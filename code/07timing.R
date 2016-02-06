@@ -136,3 +136,5 @@ pdf("scca_timing.pdf", width=5, height=5)
 print(g)
 dev.off()
 
+save.image(file="timing.RData")
+
