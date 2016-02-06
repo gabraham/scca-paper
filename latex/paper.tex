@@ -5,6 +5,8 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\s}{\mathbf{\Sigma}}
 
+\input{numbers.tex}
+
 \copyrightyear{2016} \pubyear{2016}
 
 \access{Advance Access Publication Date: Day Month Year}
@@ -46,15 +48,6 @@ the standalone command-line tool \texttt{flashpca}.\\
 \maketitle
 
 \section{Introduction}
-
-%Text Text Text Text Text Text  Text Text Text Text Text Text Text
-%Text Text  Text Text Text Text Text Text. Figure~\ref{fig:01}
-%shows that the above method  Text Text Text Text  Text Text Text
-%Text Text Text  Text Text.  \citep{Bag01} wants to know about
-%{\ldots}{\ldots} text follows.
-%\begin{equation}
-%\sum \text{\it x}+ \text{\it y} =\text{\it Z}\label{eq:01}\vspace*{-10pt}
-%\end{equation}
 
 Canonical correlation analysis (CCA) is a well-known statistical method for
 multivariate analysis of two datasets~\citep{Hotelling1936}, such as genotype
@@ -161,18 +154,18 @@ To demonstrate our tool we utilised the HapMap3 phase III
 genotypes~\citep{hapmap2010}, together with gene expression data of~602
 individuals~\citep{Stranger2012}, with~1.4M SNPs and~47,000 gene expression
 probes (out of which 21,800 probes were analysed by~\citet{Stranger2012} and
-used in our analysis). After quality control (see Supplementary Material), our
-data consisted of~602 individuals, 991,672 SNPs, and~19,573 gene expression
-probes.
+used in our analysis). After quality control (see Supplementary Material),
+our data consisted of~\nindiv individuals, \nsnps SNPs, and~\ngenes gene
+expression probes.
 
 We first confirmed that \texttt{flashpcaR::scca} produced models competitive
-with \texttt{PMA::CCA}, by comparing the best Pearson correlations produced by
-each model in cross-validation.  Using chromosome~1 from the HapMap3 data
-(78,510 SNPs), together with the~19,573 gene expression levels, we
-performed~5-fold cross-validation with a~2D grid of penalties (see the
+with \texttt{PMA::CCA}, by comparing the best Pearson correlations produced
+by each model in cross-validation.  Using chromosome~1 from the HapMap3
+data (\nsnpschr SNPs), together with the~\ngenes gene expression levels,
+we performed~5-fold cross-validation with a~2D grid of penalties (see the
 Supplementary Material for details). The maximum of the average test-fold
-Pearson correlations was higher for \texttt{flashpcaR::scca} than for
-\texttt{PMA::CCA} ($\rho=0.567$ and $\rho=0.439$, respectively).
+Pearson correlations was identical for both \texttt{flashpcaR::scca} and
+\texttt{PMA::CCA} ($\rho=0.044$).
 
 Next, we compared the speed of three tools: (i) \texttt{PMA::CCA} (\textsf{R}
 package), (ii) \texttt{flashpcaR::scca} (\textsf{R} package), and (iii)
@@ -187,13 +180,13 @@ $20\times20$-penalty grid search in 10-fold cross-validation (assuming a single
 core), this would translate to~${\sim}1$h for \texttt{flashpcaR}
 versus~${\sim}9$h for \texttt{PMA}.
 
-Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca} are bound by the
-memory limitations of \textsf{R}, the command-line tool \texttt{flashpca} allows
-much larger analyses. We ran analyses of increasing size: chromosomes~1-2, 1-3,
-$\hdots$ , 1-22, up to all~991,672 SNPs. The stand-alone \texttt{flashpca} was
-able to complete an analysis of~602 individuals, ~991,672 SNPs and~19,573 gene
-expression levels in ${\sim}30$sec (median of~30 runs), using ${\sim}9$GiB of
-RAM.
+Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca} are
+bound by the memory limitations of \textsf{R}, the command-line tool
+\texttt{flashpca} allows much larger analyses. We ran analyses of increasing
+size: chromosomes~1-2, 1-3, $\hdots$ , 1-22, up to all~\nsnps SNPs. The
+stand-alone \texttt{flashpca} was able to complete an analysis of~\nindiv
+individuals, ~\nsnps SNPs and~\ngenes gene expression levels in ${\sim}30$sec
+(median of~30 runs), using ${\sim}9$GiB of RAM.
 
 \vspace*{-12pt}
 \section{Conclusion}
