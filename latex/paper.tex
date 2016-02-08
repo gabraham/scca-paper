@@ -58,18 +58,20 @@ simpler but often-used single-SNP/single-phenotype
 approach~\citep{Ferreira2009}, particularly when analysing correlated phenotypes
 that are modulated by the same genetic variation.
 
-Analysis of multiple SNPs at a time is an attractive extension of approach,
-however, standard CCA is not well-defined in this case, as typically the number
-of samples is substantially lower than the number of SNPs ($n{\ll}p$).  One
-solution is Sparse CCA (SCCA)~\citep{Witten2009b,Witten2009c,Parkhomenko2009},
-an $L_1$-penalised variant of CCA where the number of variables that effectively
-contribute to the canonical correlation can be tuned, making the problem
-well-defined. Owing to the induced sparsity, SCCA can be useful for identifying
-a small subset of SNPs and a small subset of the phenotypes exhibiting strong
-correlations.  However, the rapidly increasing size and coverage of genotyping
-arrays (exacerbated by genotype imputation), together with the availability of
-large phenotypic datasets (transcriptomic, metabolomic, and others), makes it
-challenging to perform analyses such as SCCA using existing tools.
+Analysis of multiple SNPs at a time is an attractive extension of
+this approach, however, standard CCA is not well-defined in this
+case, as typically the number of samples is substantially lower
+than the number of SNPs ($n{\ll}p$).  One solution is Sparse CCA
+(SCCA)~\citep{Witten2009b,Witten2009c,Parkhomenko2009}, an $L_1$-penalised
+variant of CCA where the number of variables that effectively contribute to
+the canonical correlation can be tuned, making the problem well-defined. Owing
+to the induced sparsity, SCCA can be useful for identifying a small subset of
+SNPs and a small subset of the phenotypes exhibiting strong correlations.
+However, the rapidly increasing size and coverage of genotyping arrays
+(exacerbated by genotype imputation), together with the availability of
+large phenotypic datasets (transcriptomic, metabolomic, and others; e.g.,
+\citet{Bartel2015,TheGTExConsortium2015}), makes it challenging to perform
+analyses such as SCCA using existing tools.
 
 We have developed an efficient implementation of SCCA that is capable of
 analysing genome-wide SNP datasets (1M SNPs or more), together with thousands of
@@ -84,6 +86,7 @@ Here, we compare the SCCA implementation in \texttt{flashpcaR} and
 by~\citet{Witten2013}), and demonstrate the substantial improvements in speed of
 our tool, while achieving comparable or better cross-validated predictive power.
 
+\vspace*{-12pt}
 \begin{methods}
 \section{Methods}
 
@@ -111,7 +114,7 @@ SCCA is typically run on high-dimensional data, where a useful assumption is tha
 the variables within $\mathbf{X}$ and $\mathbf{Y}$ are uncorrelated,
 i.e., $\s_{XX}=\s_{YY}=\mathbf{I}$~\citep{Parkhomenko2009},
 hence, $a = u$ and $b = v$. Thus, SCCA involves solving a simplified form of CCA,
-\vspace*{-6pt}
+%\vspace*{-6pt}
 \begin{align}
 \argmax_{u,v} &  \quad u^T \s_{XY} v \notag \\
  & \mbox{s.t. } ||u||_2^2=1, ||v||_2^2 = 1, ||u||_1 \le s_u, ||v||_1 \le s_v,
@@ -123,15 +126,19 @@ of canonical vectors.
 
 The problem can be converted into the penalised (Lagrangian) form, making it
 solvable using iterative soft-thresholding~\citep{Parkhomenko2009}, which we
-employ here.  Unlike standard CCA, SCCA is well-defined even when $n{<}\min \{p,
-m\}$, and induces sparse canonical vectors, depending on the choice of $L_1$
-penalties: higher penalties lead to higher sparsity. The optimal set of
-penalties can be found via cross-validation: the data (both $\mathbf{X}$ and
-$\mathbf{Y}$) are split into training and test sets, SCCA is run on the training
-set $(\mathbf{X}_{train}, \mathbf{Y}_{train})$ using a 2D grid of penalties, and
-the pair of penalties that produce the highest correlations in the test set,
-$\mbox{Cor}(\mathbf{X}_{test} u, \mathbf{Y}_{test} v)$, are selected.
-Optionally, a new model may be fitted to the entire data using these penalties.
+employ here.  Unlike standard CCA, SCCA is well-defined even when $n{<}\min
+\{p, m\}$, and induces sparse canonical vectors, depending on the choice of
+$L_1$ penalties: higher penalties lead to higher sparsity. The optimal set
+of penalties can be found via cross-validation: the data (both $\mathbf{X}$
+and $\mathbf{Y}$) are split into training and test sets, SCCA is run on the
+training set $(\mathbf{X}_{train}, \mathbf{Y}_{train})$ using a 2D grid of
+penalties, and the pair of penalties that produce the highest correlations
+in the test set, $\mbox{Cor}(\mathbf{X}_{test} u, \mathbf{Y}_{test} v)$,
+are selected.  Optionally, a new model may be fitted to the entire data using
+these penalties. 
+% In addition to canonical correlation analysis of multiple
+%quantitative phenotypes, fast sparse partial least squares (sparse PLS)
+%can be performed by using a single phenotype ($\mathbf{Y}$ having one column).
 
 \enlargethispage{6pt}
 
@@ -180,24 +187,23 @@ $20\times20$-penalty grid search in 10-fold cross-validation (assuming a single
 core), this would translate to~${\sim}1$h for \texttt{flashpcaR}
 versus~${\sim}9$h for \texttt{PMA}.
 
-Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca} are
-bound by the memory limitations of \textsf{R}, the command-line tool
-\texttt{flashpca} allows much larger analyses. We ran analyses of increasing
-size: chromosomes~1-2, 1-3, $\hdots$ , 1-22, up to all~\nsnps SNPs. The
-stand-alone \texttt{flashpca} was able to complete an analysis of~\nindiv
-individuals, ~\nsnps SNPs and~\ngenes gene expression levels in ${\sim}30$sec
-(median of~30 runs), using ${\sim}9$GiB of RAM.
+Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca}
+are bound by the memory limitations of \textsf{R}, the command-line
+tool \texttt{flashpca} allows much larger analyses. We ran analyses of
+increasing size: chromosomes~1-2, 1-3, $\hdots$ , 1-22, up to all~\nsnps
+SNPs. The stand-alone \texttt{flashpca} completed an analysis of~\nindiv
+individuals, ~\nsnps SNPs and~\ngenes gene expression levels in median time
+of ${\sim}30$sec, using ${\sim}9$GiB of RAM.
 
 \vspace*{-12pt}
 \section{Conclusion}
 
 \texttt{flashpca} provides a fast implementation of sparse canonial correlation
-analysis, making it possible to rapidly analyse high dimensional datasets.  For
-datasets too large to fit in \textsf{R}, the command-line tool is available as
-well, enabling fast analysis of~${>}1$M SNPs and thousands of phenotypes at a
-time.  In addition to canonical correlation analysis of multiple quantitative
-phenotypes, fast sparse partial least squares (sparse PLS) can be performed by
-using a single phenotype at a time.
+analysis, making it possible to rapidly analyse high dimensional datasets.
+For datasets too large to fit in \textsf{R}, the command-line tool is
+available as well, enabling large QTL analyses of~${>}1$M SNPs and thousands
+of phenotypes.
+
 
 %\section*{Acknowledgements}
 

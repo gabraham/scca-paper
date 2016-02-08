@@ -27,6 +27,11 @@ nreps <- 30
 n1 <- 5000
 n2 <- 20000
 
+for(n in nsnps) {
+   write.table(colnames(G)[1:n], file=paste0("snps_", n, ".txt"),
+      quote=FALSE, col.names=FALSE, row.names=FALSE)
+}
+
 res <- lapply(nsnps, function(n) {
    Gs <- G[, 1:n]
    r <- lapply(npheno, function(p) {
@@ -89,7 +94,7 @@ d1$time <- t(sapply(strsplit(d1$V2, "m|s"), as.numeric)) %*% c(60, 1)
 d3 <- aggregate(time ~ label, FUN=median, data=d1)
 colnames(d3)[2] <- "median"
 
-d2 <- read.table(pipe("wc -l *chr*to*.bim"), header=FALSE, sep="",
+d2 <- read.table(pipe("wc -l *chr*.bim"), header=FALSE, sep="",
    stringsAsFactors=FALSE)
 d2 <- d2[grepl("\\.bim", d2$V2), ]
 d2$label <- gsub(
@@ -108,6 +113,7 @@ res3 <- rbind(res2, d[, vn])
 ################################################################################
 # Plotting
 res4 <- subset(res3, npheno %in% c(100, 10000, ncol(E)) & expr != "PMA")
+
 g <- ggplot(res4, aes(x=nsnps, y=median,
    colour=factor(npheno), shape=expr, linetype=expr))
 g <- g + geom_line(size=1)
@@ -127,10 +133,16 @@ g <- g + annotate("text", label="flashpca\n(command line)", x=4.5e5, y=1.2,
 g <- g + annotate("text", label="PMA\n(R package)", x=4000, y=62)
 g <- g + annotate("segment", x=2e4, y=5e-2, xend=1.5e4, yend=0.19, colour="black",
    size=0.5, arrow=arrow(length=unit(0.03, "npc")))
-g <- g + annotate("segment", x=5e5, y=2, xend=5e5, yend=10, colour="black",
+g <- g + annotate("segment", x=5e5, y=2, xend=5e5, yend=15, colour="black",
    size=0.5, arrow=arrow(length=unit(0.03, "npc")))
 g <- g + annotate("segment", x=5000, y=30, xend=7000, yend=9, colour="black",
    size=0.5, arrow=arrow(length=unit(0.03, "npc")))
+g <- g + annotate("point", x=8.4e3, y=3.6e-2, colour="black", shape=19,
+   size=2.5, fill="black")
+g <- g + annotate("point", x=1.7e5, y=1.4, colour="black", shape=24, size=2.5,
+   fill="black")
+g <- g + annotate("point", x=2000, y=75, colour="black", shape=22, size=2.5,
+   fill="black")
 
 pdf("scca_timing.pdf", width=5, height=5)
 print(g)
