@@ -37,7 +37,7 @@ nucleotide polymorphisms (SNPs), with another set of measurements, such as gene
 expression levels.  We present a fast implementation of SCCA, enabling rapid
 analysis of hundreds of thousands of SNPs together with thousands of phenotypes.
 Our approach is implemented both as an R package \texttt{flashpcaR} and within
-the standalone command-line tool \texttt{flashpca}.\\
+the standalone commandline tool \texttt{flashpca}.\\
 \textbf{Availability and implementation:}
 \href{https://github.com/gabraham/flashpca}{https://github.com/gabraham/flashpca}
 \\ \textbf{Contact:}
@@ -49,14 +49,14 @@ the standalone command-line tool \texttt{flashpca}.\\
 
 \section{Introduction}
 
-Canonical correlation analysis (CCA) is a well-known statistical method for
-multivariate analysis of two datasets~\citep{Hotelling1936}, such as genotype
-data (single nucleotide polymorphisms) and multivariate phenotypes such as gene
-expression levels. Approaches that consider one SNP at a time together with
-multiple phenotypes have been shown to increase power to detect QTLs over the
-simpler but often-used single-SNP/single-phenotype
-approach~\citep{Ferreira2009}, particularly when analysing correlated phenotypes
-that are modulated by the same genetic variation.
+Canonical correlation analysis (CCA) is a well-known statistical approach
+for multivariate analysis of two datasets~\citep{Hotelling1936}, such as
+genotype data (single nucleotide polymorphisms, SNPs) and multivariate
+phenotypes such as gene expression levels. Approaches that consider one SNP
+at a time together with multiple phenotypes have been shown to increase power
+to detect QTLs over the simpler but often-used single-SNP/single-phenotype
+approach~\citep{Ferreira2009,Inouye2012}, particularly when analysing
+correlated phenotypes that are modulated by the same genetic variation.
 
 Analysis of multiple SNPs at a time is an attractive extension of
 this approach, however, standard CCA is not well-defined in this
@@ -97,8 +97,7 @@ column-wise standardised (zero mean, unit variance).  For a single pair of
 canonical variables $a$ and $b$, CCA involves solving the problem
 \vspace*{-10pt}
 \begin{align}
-\argmax_{a,b} & \frac{a^T \s_{XY} b}{
-   \sqrt{a^T \s_{XX} a \; b^T \s_{YY} b}},
+\argmax_{a,b} & \frac{a^T \s_{XY} b}{\sqrt{a^T \s_{XX} a \; b^T \s_{YY} b}},
 \label{eqn:cca}
 \vspace*{-10pt}
 \end{align}
@@ -145,10 +144,10 @@ these penalties.
 \end{methods}
 
 \begin{figure}[!tpb]
-\centerline{\includegraphics[width=0.49\textwidth]{scca_timing-crop.pdf}}
+\centerline{\includegraphics[width=0.47\textwidth]{scca_timing-crop.pdf}}
 \caption{
 Timing (median of 30 runs) of SCCA implemented in (i) the \texttt{flashpcaR}
-(\textsf{R} package) and (ii) \texttt{flashpca} (stand-alone command-line tool),
+(\textsf{R} package) and (ii) \texttt{flashpca} (stand-alone commandline tool),
 compared with SCCA from \texttt{PMA}, using subsets of the HapMap3 dataset with gene
 expression levels as phenotypes.
 }
@@ -166,56 +165,47 @@ our data consisted of~\nindiv individuals, \nsnps SNPs, and~\ngenes gene
 expression probes.
 
 We first confirmed that \texttt{flashpcaR::scca} produced models competitive
-with \texttt{PMA::CCA}, by comparing the best Pearson correlations produced
-by each model in cross-validation.  Using chromosome~1 from the HapMap3
-data (\nsnpschr SNPs), together with the~\ngenes gene expression levels,
-we performed~5-fold cross-validation with a~2D grid of penalties (see the
-Supplementary Material for details). The maximum of the average test-fold
-Pearson correlations was identical for both \texttt{flashpcaR::scca} and
-\texttt{PMA::CCA} ($\rho=0.044$).
-
-Next, we compared the speed of three tools: (i) \texttt{PMA::CCA}
-(\textsf{R} package), (ii) \texttt{flashpcaR::scca} (\textsf{R}
-package), and (iii) \texttt{flashpca} (stand-alone command-line tool).
-Figure~1\vphantom{\ref{fig:01}} shows a timing comparison between
-\texttt{flashpcaR::scca} and \texttt{PMA::CCA}.  \texttt{flashpcaR::scca} was
-${\sim}9\times$ faster than \texttt{PMA::CCA}, with a medium-sized analysis
-(50,000 SNPs and~10,000 gene expression levels) completing in~XXXs for the
-former but~XXXs for the latter.  For performing a~20${\times}$20-penalty
-grid search in 10-fold cross-validation (assuming a single core), this
-would translate to~${\sim}XXX$h for \texttt{flashpcaR} versus~${\sim}XXX$h
-for \texttt{PMA}.
+with \texttt{PMA::CCA}, by comparing the best Pearson correlations
+produced by each model in cross-validation.  Using chromosome~1 from the
+HapMap3 data (\nsnpschr SNPs), together with the~\ngenes gene expression
+levels, we performed~5-fold cross-validation with a~2D grid of penalties
+(see the Supplementary Material). The maximum of the average test-fold
+Pearson correlations was identical for both \texttt{flashpcaR::scca}
+and \texttt{PMA::CCA} ($\rho{=}0.044$).  Next, we compared the speed
+of three tools: (i) \texttt{PMA::CCA} (\textsf{R} package), (ii)
+\texttt{flashpcaR::scca} (\textsf{R} package), and (iii) \texttt{flashpca}
+(stand-alone commandline tool).  Figure~1\vphantom{\ref{fig:01}} shows a
+timing comparison between \texttt{flashpcaR::scca} and \texttt{PMA::CCA}.
+\texttt{flashpcaR::scca} was ${\sim}9\times$ faster than \texttt{PMA::CCA},
+with a medium-sized analysis (50,000 SNPs and~10,000 gene expression levels)
+completing in~XXXs for the former but~XXXs for the latter.  For performing
+a~20${\times}$20-penalty grid search in 10-fold cross-validation (on a
+single core), this would translate to~${\sim}XXX$h for \texttt{flashpcaR}
+versus~${\sim}XXX$h for \texttt{PMA}.
 
 Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca}
-are bound by the memory limitations of \textsf{R}, the command-line
+are bound by the memory limitations of \textsf{R}, the commandline
 tool \texttt{flashpca} allows much larger analyses. We ran analyses of
 increasing size: chromosomes~1-2, 1-3, $\hdots$ , 1-22, up to all~\nsnps
 SNPs. The stand-alone \texttt{flashpca} completed an analysis of~\nindiv
 individuals, ~\nsnps SNPs and~\ngenes gene expression levels in median time
 of ${\sim}30$sec, using ${\sim}9$GiB of RAM. Note that this timing includes
-the overhead in loading the data into RAM.
+the overhead in loading the data into RAM.\vspace*{-12pt}
 
-\vspace*{-12pt}
 \section{Conclusion}
 
 \texttt{flashpca} provides a fast implementation of sparse canonial correlation
 analysis, making it possible to rapidly analyse high dimensional datasets.
-For datasets too large to fit in \textsf{R}, the command-line tool is
+For datasets too large to fit in \textsf{R}, the commandline tool is
 available as well, enabling large QTL analyses of~${>}1$M SNPs and thousands
-of phenotypes.
+of phenotypes.\vspace*{-12pt}
 
-
-%\section*{Acknowledgements}
-
-\vspace*{-12pt}
 \section*{Funding}
 
-This work has been supported by the NHMRC grant no.~1062227. GA was supported by
-an NHMRC Early Career Fellowship (no.~1090462). MI was supported by a Career
-Development Fellowship co-funded by the NHMRC and Heart Foundation
-(no.~1061435).
-
-\vspace*{-12pt}
+This work has been supported by the NHMRC grant no.~1062227. GA was supported
+by an NHMRC Early Career Fellowship (no.~1090462). MI was supported by a
+Career Development Fellowship co-funded by the NHMRC and Heart Foundation
+(no.~1061435).\vspace*{-12pt}
 
 \bibliographystyle{natbib}
 \bibliography{paper}
