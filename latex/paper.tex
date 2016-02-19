@@ -163,23 +163,23 @@ expression probes.
 
 We first confirmed that \texttt{flashpcaR::scca} produced models competitive
 with \texttt{PMA::CCA}, by comparing the best Pearson correlations produced
-by each model in cross-validation.  To ensure strong association signals,
-we used 10,000 SNPs from chromosome~1 of the HapMap3 data, and simulated
-1,000 gene expression levels, we performed~3-fold cross-validation over
-a~30$\times$25~grid of penalties, using~3 cores in parallel (one per fold;
-see the Supplementary Material). The maximum of the average test-fold
-Pearson correlation was identical for both \texttt{flashpcaR::scca} and
-\texttt{PMA::CCA} ($\rho{=}0.931$), completing in~4m and~24m, respectively.
+by each model in cross-validation.  To ensure strong associations despite the
+limited sample size, we used 10,000 SNPs from chromosome~1 of the HapMap3
+data, and simulated~1,000 gene expression levels, we performed~3-fold
+cross-validation over a~30$\times$25~grid of penalties, using~3 cores
+in parallel (see the Supplementary Material). The maximum of the average
+test Pearson correlation was identical for \texttt{flashpcaR::scca}
+and \texttt{PMA::CCA} ($\rho{=}0.931$), completing in~4m and~24m, respectively.
 
-To further assesss the relative speed improvement using real-world data,
-we compared the runtime of three tools on datasets of different sizes:
-(i) \texttt{PMA::CCA} (\textsf{R} package), (ii) \texttt{flashpcaR::scca}
-(\textsf{R} package), and (iii) \texttt{flashpca} (stand-alone commandline
-tool).  Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca}
-are bound by the memory limitations of \textsf{R}, the commandline
-tool \texttt{flashpca} allows much larger analyses; hence we also ran
-larger analyses of increasing size: chromosomes~1--2, 1--3, $\hdots$
-, 1--22, up to all~\nsnps SNPs.  Figure~1\vphantom{\ref{fig:01}}
+To further assesss the relative speed improvement using real-world
+data we used subsets of the HapMap3 genotypes and real gene expression
+levels and compared the runtime of: (i) \texttt{PMA::CCA} (\textsf{R}
+package), (ii) \texttt{flashpcaR::scca} (\textsf{R} package), and (iii)
+\texttt{flashpca} (commandline tool).  Whereas both \texttt{PMA::CCA} and
+\texttt{flashpcaR::flashpca} are bound by the memory limitations of \textsf{R},
+the commandline tool \texttt{flashpca} allows much larger analyses; hence
+we also ran larger analyses of increasing size: chromosomes~1--2, 1--3,
+$\hdots$ , 1--22, up to all~\nsnps SNPs.  Figure~1\vphantom{\ref{fig:01}}
 shows that \texttt{flashpcaR::scca} was $8\text{--}23\times$ faster
 than \texttt{PMA::CCA}, with an analysis of 75,000 SNPs and~10,000 gene
 expression levels completing in~3s and~54s, respectively.  The stand-alone
