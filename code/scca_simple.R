@@ -18,18 +18,28 @@ n <- nrow(Gtrn)
 v <- rnorm(ncol(E))
 
 for(i in 1:25) {
-   u <- fprod(Gtrn, Etrn %*% v) / n
-   u <- u / sqrt(sum(u^2))
+   #u <- fprod(Gtrn, Etrn %*% v) / n
+   u <- fprod(Gtrn, Etrn %*% v)
+   if(any(abs(u) > 0)) {
+      u <- u / sqrt(sum(u^2))
+   }
    u <- sign(u) * pmax(abs(u) - l1, 0)
    if(all(u == 0)) {
       cat("u is all zero, stopping\n")
       break
    }
-   u <- u / sqrt(sum(u^2))
-   v <- fprod(Etrn, Gtrn %*% u) / n
-   v <- v / sqrt(sum(v^2))
+   if(any(abs(u) > 0)) {
+      u <- u / sqrt(sum(u^2))
+   }
+   #v <- fprod(Etrn, Gtrn %*% u) / n
+   v <- fprod(Etrn, Gtrn %*% u)
+   if(any(abs(v) > 0)) {
+      v <- v / sqrt(sum(v^2))
+   }
    v <- sign(v) * pmax(abs(v) - l2, 0)
-   v <- v / sqrt(sum(v^2))
+   if(any(abs(v) > 0)) {
+      v <- v / sqrt(sum(v^2))
+   }
    Xtrn <- Gtrn %*% u
    Ytrn <- Etrn %*% v
    ptrn <- cor(Xtrn, Ytrn)
