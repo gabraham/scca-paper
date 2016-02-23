@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,10pt]{article}
 
 
 %\usepackage{a4wide}
@@ -53,8 +53,8 @@ missingness~${>}1\%$, or did not have matching gene expression data,
 resulting in~\nindiv individuals. We excluded non-autosomal SNPs, SNPs
 with MAF~${<}5\%$, missingness~${>}1\%$, and deviation from Hardy-Weinberg
 equilibrium~$P{<}5\times10^{-6}$ using PLINK~1.9~\citep{purcell2007,Chang2015},
-leaving~\nsnps autosomal SNPs (see below). The remaining missing genotypes were
-randomly imputed according to the frequencies of the non-missing observations.
+leaving~\nsnps autosomal SNPs. The remaining missing genotypes were randomly
+imputed according to the frequencies of the non-missing observations.
 
 For the gene expression data, we used a subset consisting of the~21,800 probes
 that were analysed by~\citep{Stranger2012}, utilising the original authors'
@@ -66,22 +66,34 @@ these populations.  We further filtered probes with low variance
 (std.~dev.~${<}0.1$), leaving~\ngenes probes. Both the gene expression levels and
 the genotypes were standardised to zero-mean and unit-variance.
 
-\section{Comparison of predictive power in simulation}
+\section{Comparison of predictive power with simulated gene expression data}
+\label{section:sim}
 
-Utilising 10,000 SNPs from chromosome~1, we simulated 1,000 gene expression
-levels as
+The number of samples in the HapMap3 data ($n=601$) is not does provide
+for adequate statistical power to detect weak correlations or difference
+in correlations between two competing methods, particularly when 3-fold
+cross-validation further reduces the sample size in the test data to
+${\sim}200$. For example, there is only $30\%$ power to detect a correlation
+$\rho=0.1$ at an $\alpha=0.05$ with 200 samples) at an $\alpha=0.05$ with~200
+samples, and only $7\%$ power to detect a difference in correlations $\Delta
+\rho=0.05$ at $\alpha=0.05$ (comparing correlations achieved by two methods).
+
+Hence, simulate gene expression data with strong associations with the
+genotypes, allowing for higher correlations to be observed and meaningfully
+compared.  Utilising 10,000 SNPs from HapMap3 chromosome~1, we simulated 1,000 gene
+expression levels as
 $$
 \mathbf{Y} = \mathbf{X} \mathbf{B} + \mathbf{E},
 $$
 where $\mathbf{X}$ are the genotypes ($n \times p$ matrix), $\mathbf{B}$
 is a $p \times m$ matrix of weights, and $\mathbf{E}$ is an $n \times m$
-matrix representing the error (noise). To match the sparsity assumptions of
-SCCA, $\mathbf{B}$ was chosen to be a mixture of weights $\{0.001, 1\}$ with
-proportions 0.9999 and 0.0001 (across all $n \times m$ entries), respectively,
-(0.001 rather than zero was used to prevent some probes from having zero
-genetic variance). Each column $k=1,\hdots,m$ of $\mathbf{E}$ was $E_k \sim
-\mathcal{N}(0, \frac{1-h^2}{h^2} \mbox{var}((\mathbf{X}\mathbf{B})_k))$,
-and $h^2=0.1$.
+matrix representing the error (noise). To match the sparsity assumptions
+of SCCA, $\mathbf{B}$ was chosen to be a mixture of weights $\{0.001, 1\}$
+with proportions 0.9999 and 0.0001 (across all $n \times m$ entries),
+respectively.  Note that a value of 0.001 was used rather than zero, in
+order prevent some probes from having zero genetic variance. Each column
+$k=1,\hdots,m$ of $\mathbf{E}$ was $E_k \sim \mathcal{N}(0, \frac{1-h^2}{h^2}
+\mbox{var}((\mathbf{X}\mathbf{B})_k))$, and $h^2=0.1$.
 
 We used 3-fold cross-validation to compare \texttt{flashpcaR::scca} and
 \texttt{PMA::CCA}, over a~2D grid of $30\times25$ penalties, estimating one
@@ -92,25 +104,31 @@ $$
    \mbox{Cor}(\mathbf{X}_{test}^k u^k, \mathbf{Y}_{test}^k v^k).
 $$
 
+The maximum of the average test Pearson correlation was identical for
+\texttt{flashpcaR::scca} and \texttt{PMA::CCA} ($\rho{=}0.931$), completing
+in~4m and~24m, respectively (parallelising over 3 cores).
+
 \section{Timing experiments}
 
-For timing of \texttt{flashpcaR::scca} and \texttt{PMA::CCA}, we used contiguous
-subsets of chromosome~1 (1000, 5000, 10,000, 20,000, and 50,000 SNPs, out
-of~\ngenes SNPs in total) and contigous subsets of the~\ngenes gene expression
-probes (1000, 10,000, and all~\ngenes probes).
+For timing of \texttt{flashpcaR::scca} and \texttt{PMA::CCA}, we used
+contiguous subsets of HapMap3 chromosome~1 (1000, 5000, 10,000, 20,000,
+and 50,000 SNPs, out of~\ngenes SNPs in total) and contiguous subsets of
+the~\ngenes real gene expression probes (1000, 10,000, and all~\ngenes
+probes from~\citep{Stranger2012}).
 
 We used the \textsf{R} package \texttt{microbenchmark}~\citep{Mersmann2015}
-to run~30 replications of each timing experiment.  For all experiments we
-estimated one pair of canonical vectors $(u_1, v_1)$.  For the results in the
-main text, we initialised (``warm started'') $v_1$ to a standard normally-
-distributed vector of variates $\sim\mathcal{N}(0,1)$. \texttt{PMA::CCA} and
-\texttt{flashpcaR::scca} (but not the commandline version \texttt{flashpca})
-allow the user to provide their own initialisation, and we experimented with
-other forms, including using the column means of the gene expression data
-and the rank-1 singular value decomposition (SVD) $\mathbf{X}^T \mathbf{Y}
-\approx u_1 d_1 v_1^T$) using \texttt{flashpcaR::flashpca}. The overall
-trend of \texttt{flashpca} being several-fold faster than \texttt{PMA}
-was consistent across all three initialistion methods~(Figure~\ref{fig:s01}).
+to run~30 replications of each timing experiment.  For all
+experiments we estimated one pair of canonical vectors $(u_1,
+v_1)$.  For the results in the main text, we initialised (``warm
+started'') $v_1$ to a standard normally-distributed vector of variates
+$\sim\mathcal{N}(0,1)$. \texttt{PMA::CCA} and \texttt{flashpcaR::scca}
+allow the user to provide their own initialisation\footnote{The commandline
+version \texttt{flashpca} currently only supports random initialisation.},
+and we experimented with other forms, including using the column means
+of the gene expression data and the rank-1 singular value decomposition
+(SVD) $\mathbf{X}^T \mathbf{Y} \approx u_1 d_1 v_1^T$). The overall trend of
+\texttt{flashpcaR} being several-fold faster than \texttt{PMA} was consistent
+across all three initialistion methods~(Figure~\ref{fig:s01}).
 
 \begin{figure}[!tpb]
 \centering
@@ -118,8 +136,8 @@ was consistent across all three initialistion methods~(Figure~\ref{fig:s01}).
 \caption{
 Timing (median of 30 runs) of SCCA implemented in (i) the \texttt{flashpcaR}
 (\textsf{R} package) and (ii) \texttt{flashpca} (stand-alone commandline tool),
-compared with SCCA from \texttt{PMA}, using subsets of the HapMap3 dataset with gene
-expression levels as phenotypes. We compared three schemes for initialising
+compared with SCCA from \texttt{PMA}, using subsets of the HapMap3 dataset with real
+gene expression levels as phenotypes. We compared three schemes for initialising
 $v_1$: (i) ``mean'': column means of the gene expression data; (ii) ``rand'':
 normally-distributed variates $\mathcal{N}(0, 1)$; and (iii) ``svd'': 1st
 right singular value of $\mathbf{X}^T \mathbf{Y}$.
@@ -136,6 +154,23 @@ For \texttt{PMA::CCA}, we increased the maximum number of iterations to match
 that used by \texttt{flashpcaR::scca} (default=1000), in order to prevent
 early termination of the algorithm before adequate numerical convergence was
 achieved. 
+
+\section{Parallelising grid search for penalty optimisation}
+
+As described in Section~\ref{section:sim}, using multiple
+cores can speed up the penalty grid search for \texttt{PMA} and
+\texttt{flashpcaR}. Within \textsf{R}, this can be achieved using the
+\texttt{foreach}~\citep{foreach} and \texttt{doMC}~\citep{doMC} packages. We
+recommend using coarse-grain parallelisation for cross-validation, e.g.,
+5 cores for 5-fold cross-validation. Examples are given in the code at
+\url{https://github.com/gabraham/scca-paper}.
+
+The commandline tool \texttt{flashpca} currently does not support built-in
+cross-validation (as of v1.2.6). We recommend splitting the data into
+training/test folds using PLINK and running \texttt{flashpca} on these subsets,
+possibly using GNU parallel~\citep{Tange2011a}.
+
+
 
 \bibliographystyle{unsrtnat}
 \bibliography{paper}

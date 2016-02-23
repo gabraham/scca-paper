@@ -46,7 +46,7 @@ res <- lapply(nsnps, function(n) {
       cat(n, p, "\n")
 
       K <- fprod(Es, Gs)
-      f <- flashpca(K, ndim=1, verbose=FALSE, stand="none", check_geno=FALSE)
+      f <- flashpca(K, ndim=50, verbose=FALSE, stand="none", check_geno=FALSE)
       Vinit1 <- f$vectors[,1]
       Vinit2 <- rnorm(ncol(Es))
       Vinit3 <- colMeans(Es)

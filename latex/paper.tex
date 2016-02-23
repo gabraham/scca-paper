@@ -21,7 +21,7 @@
 \author[Sample \textit{et~al}.]{Gad Abraham\,$^{\text{\sfb 1,2}*}$
 and Michael Inouye\,$^{\text{\sfb 1,2}}$}
 \address{$^{\text{\sf 1}}$ Centre for Systems Genomics, School of
-BioSciences, University of Melbourne, Parkville 3010, VIC, Australia and \\
+BioSciences, University of Melbourne, Parkville 3010, VIC, Australia. \\
 $^{\text{\sf 2}}$ Department of Pathology, Faculty of Medicine, Dentistry, and
 Health Sciences, University of Melbourne,\\ Parkville 3010, VIC, Australia.}
 
@@ -51,40 +51,40 @@ the standalone commandline tool \texttt{flashpca}.\\
 
 Canonical correlation analysis (CCA) is a well-known statistical approach
 for multivariate analysis of two datasets~\citep{Hotelling1936}, such as
-genotype data (single nucleotide polymorphisms, SNPs) and multivariate
-phenotypes such as gene expression levels. Approaches that consider one SNP
-at a time together with multiple phenotypes have been shown to increase power
-to detect QTLs over the simpler but often-used single-SNP/single-phenotype
+genotype data (single nucleotide polymorphisms, SNPs) and multiple phenotypes
+such as gene expression levels. Approaches that consider one SNP at a time
+together with multiple phenotypes have been shown to increase power to
+detect QTLs over the simpler but often-used single-SNP/single-phenotype
 approach~\citep{Ferreira2009,Inouye2012}, particularly when analysing
 correlated phenotypes that are modulated by the same genetic variation.
 
-Analysis of multiple SNPs at a time is an attractive extension of
-this approach, however, standard CCA is not well-defined in this
-case, as typically the number of samples is substantially lower
-than the number of SNPs ($n{\ll}p$).  One solution is Sparse CCA
-(SCCA)~\citep{Witten2009b,Witten2009c,Parkhomenko2009}, an $L_1$-penalised
-variant of CCA where the number of variables that effectively contribute to
-the canonical correlation can be tuned, making the problem well-defined. Owing
-to the induced sparsity, SCCA can be useful for identifying a small subset of
-SNPs and a small subset of the phenotypes exhibiting strong correlations.
-However, the rapidly increasing size and coverage of genotyping arrays
-(exacerbated by genotype imputation), together with the availability of
-large phenotypic datasets (transcriptomic, metabolomic, and others; e.g.,
+Analysis of multiple SNPs at a time is a natural extension of the
+single-SNP multiple-phenotype approach, however, standard CCA is not
+well-defined when the number of samples is lower than the number of
+SNPs or phenotypes ($n<\min\{p, m\}$).  One solution is Sparse CCA
+(SCCA)~\citep{Witten2009c,Witten2009b,Parkhomenko2009}, an $L_1$-penalised
+variant of CCA which allow for tuning the number of variables that
+effectively contribute to the canonical correlation, thus making the problem
+well-defined. Owing to the induced sparsity, SCCA can be useful for identifying
+a small subset of SNPs and a small subset of the phenotypes exhibiting strong
+correlations.  However, the rapidly increasing size and coverage of genotyping
+arrays (exacerbated by genotype imputation), together with the availability
+of large phenotypic datasets (transcriptomic, metabolomic, and others; e.g.,
 \citet{Bartel2015,TheGTExConsortium2015}), makes it challenging to perform
 analyses such as SCCA using existing tools.
 
-We have developed an efficient implementation of SCCA that is capable of
-analysing genome-wide SNP datasets (1M SNPs or more), together with thousands of
-phenotypes (such as gene expression levels), as part of the tool
-\texttt{flashpca}~\citep{Abraham2014}. The main code is implemented in
-\textsf{C++} using the Eigen~3 numerical library~\citep{eigenweb}, and an
-\textsf{R} implementation (package \texttt{flashpcaR}) is available via
+We have developed an efficient implementation of SCCA that is capable
+of analysing genome-wide SNP datasets (1M SNPs or more), together with
+thousands of phenotypes (such as gene expression levels), as part of the
+tool \texttt{flashpca}~\citep{Abraham2014}. The main code is implemented
+in \textsf{C++} using the Eigen~3 numerical library~\citep{eigenweb},
+and an \textsf{R} interface (package \texttt{flashpcaR}) is available via
 RcppEigen~\citep{Bates2013}.
 
 Here, we compare the SCCA implementation in \texttt{flashpcaR} and
 \texttt{flashpca} with a widely-used implementation (\texttt{PMA},
-by~\citet{Witten2013}), and demonstrate the substantial improvements in speed of
-our tool, while achieving comparable or better cross-validated predictive power.
+by~\citet{Witten2013}), and demonstrate the substantial improvements in
+speed of our tool, allowing for large analyses to be performed rapidly.
 
 \vspace*{-12pt}
 \begin{methods}
@@ -104,10 +104,10 @@ canonical variables $a$ and $b$, CCA involves solving the problem
 where $\s_{XX}$ and $\s_{YY}$ are the covariance matrices of
 $\mathbf{X}$ and $\mathbf{Y}$, respectively, and $\s_{XY}$ is the
 covariance matrix of $\mathbf{X}$ and $\mathbf{Y}$. The solution is given by
-the singular value decomposition of $\s_{XX}^{-1/2} \s_{XX}
+the singular value decomposition (SVD) of $\s_{XX}^{-1/2} \s_{XX}
 \s_{XY}^{-1/2}$, with $a = \s_{XX}^{-1/2} u_1$ and $b =
 \s_{YY}^{-1/2} v_1$, where $u_1$ and $v_1$ are the first left and right
-singular vectors.
+singular vectors from the SVD.
 
 SCCA is typically run on high-dimensional data, where a useful assumption is that
 the variables within $\mathbf{X}$ and $\mathbf{Y}$ are uncorrelated,
@@ -121,13 +121,13 @@ hence, $a = u$ and $b = v$. Thus, SCCA involves solving a simplified form of CCA
 \end{align}
 where $u$ and $v$ are the left and right canonical vectors, 
 and $s_u$ and $s_v$ are constraints on the $L_1$ norms
-of canonical vectors.
+of the canonical vectors.
 
 The problem can be converted into the penalised (Lagrangian) form, making it
 solvable using iterative soft-thresholding~\citep{Parkhomenko2009}, which we
 employ here.  Unlike standard CCA, SCCA is well-defined even when $n{<}\min
 \{p, m\}$, and induces sparse canonical vectors, depending on the choice of
-$L_1$ penalties: higher penalties lead to higher sparsity. The optimal set
+$L_1$ penalties (higher penalties lead to higher sparsity). The optimal set
 of penalties can be found via cross-validation: the data (both $\mathbf{X}$
 and $\mathbf{Y}$) are split into training and test sets, SCCA is run on the
 training set $(\mathbf{X}_{train}, \mathbf{Y}_{train})$ using a 2D grid of
@@ -161,32 +161,30 @@ used in our analysis). After quality control (see Supplementary Material),
 our data consisted of~\nindiv individuals, \nsnps SNPs, and~\ngenes gene
 expression probes.
 
-We first confirmed that \texttt{flashpcaR::scca} produced models competitive
-with \texttt{PMA::CCA}, by comparing the best Pearson correlations produced
-by each model in cross-validation.  To ensure strong associations despite the
-limited sample size, we used 10,000 SNPs from chromosome~1 of the HapMap3
-data, and simulated~1,000 gene expression levels, we performed~3-fold
-cross-validation over a~30$\times$25~grid of penalties, using~3 cores
-in parallel (see the Supplementary Material). The maximum of the average
-test Pearson correlation was identical for \texttt{flashpcaR::scca}
-and \texttt{PMA::CCA} ($\rho{=}0.931$), completing in~4m and~24m, respectively.
-
-To further assesss the relative speed improvement using real-world
-data we used subsets of the HapMap3 genotypes and real gene expression
-levels and compared the runtime of: (i) \texttt{PMA::CCA} (\textsf{R}
-package), (ii) \texttt{flashpcaR::scca} (\textsf{R} package), and (iii)
-\texttt{flashpca} (commandline tool).  Whereas both \texttt{PMA::CCA} and
-\texttt{flashpcaR::flashpca} are bound by the memory limitations of \textsf{R},
-the commandline tool \texttt{flashpca} allows much larger analyses; hence
-we also ran larger analyses of increasing size: chromosomes~1--2, 1--3,
-$\hdots$ , 1--22, up to all~\nsnps SNPs.  Figure~1\vphantom{\ref{fig:01}}
-shows that \texttt{flashpcaR::scca} was $8\text{--}23\times$ faster
-than \texttt{PMA::CCA}, with an analysis of 75,000 SNPs and~10,000 gene
-expression levels completing in~3s and~54s, respectively.  The stand-alone
-\texttt{flashpca} was faster than \texttt{PMA::CCA} as well, and completed
-an analysis of~\nindiv individuals, \nsnps SNPs and~\ngenes gene expression
-levels in median wall time of ${\sim}74$s (including all overheads),
-using~${\sim}9$GiB of RAM.\vspace*{-12pt}
+We first confirmed that \texttt{flashpcaR::scca} produced models comparable
+with \texttt{PMA::CCA}, by comparing the results in cross-validation on HapMap3
+genotypes together with simulated gene expression levels (Supplementary
+Material).  Next, to further assesss the relative speed improvement using
+real-world data, we used subsets of the HapMap3 genotypes and real gene
+expression levels~\citep{Stranger2012} and compared the runtime of: (i)
+\texttt{PMA::CCA} (\textsf{R} package), (ii) \texttt{flashpcaR::scca}
+(\textsf{R} package), and (iii) \texttt{flashpca} (commandline tool).
+Whereas both \texttt{PMA::CCA} and \texttt{flashpcaR::flashpca} are bound by
+the memory limitations of \textsf{R}, the commandline tool \texttt{flashpca}
+allows much larger analyses; hence we also ran larger analyses of increasing
+size: chromosomes~1--2, 1--3, $\hdots$ , 1--22, up to all~\nsnps SNPs.
+Figure~1\vphantom{\ref{fig:01}} shows that \texttt{flashpcaR::scca} was
+$8\text{--}23\times$ faster than \texttt{PMA::CCA}, with an analysis of
+75,000 SNPs and~10,000 gene expression levels completing in~3s and~54s,
+respectively.  Note that runtime is not monotonic in the number of
+SNPs/phenotypes, since the number of iterations to convergence is affected
+by factors including LD structure.  The commandline \texttt{flashpca} was
+faster than \texttt{PMA::CCA} as well, and completed an analysis of~\nindiv
+individuals, \nsnps SNPs and~\ngenes gene expression levels in median
+wall time of ${\sim}74$s (including all overheads), using~${\sim}10$GiB
+of RAM. Note that cross-validation over a grid of penalties will increase
+these times considerably, in which case parallelisation over several cores
+is recommended (Supplementary Material).\vspace*{-12pt}
 
 \section{Conclusion}
 
