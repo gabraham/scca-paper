@@ -18,8 +18,8 @@ n <- nrow(Gtrn)
 v <- rnorm(ncol(E))
 
 for(i in 1:25) {
-   #u <- fprod(Gtrn, Etrn %*% v) / n
-   u <- fprod(Gtrn, Etrn %*% v)
+   #u <- crossprod2(Gtrn, Etrn %*% v) / n
+   u <- crossprod2(Gtrn, Etrn %*% v)
    if(any(abs(u) > 0)) {
       u <- u / sqrt(sum(u^2))
    }
@@ -31,8 +31,8 @@ for(i in 1:25) {
    if(any(abs(u) > 0)) {
       u <- u / sqrt(sum(u^2))
    }
-   #v <- fprod(Etrn, Gtrn %*% u) / n
-   v <- fprod(Etrn, Gtrn %*% u)
+   #v <- crossprod2(Etrn, Gtrn %*% u) / n
+   v <- crossprod2(Etrn, Gtrn %*% u)
    if(any(abs(v) > 0)) {
       v <- v / sqrt(sum(v^2))
    }

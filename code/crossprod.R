@@ -25,8 +25,18 @@ prodCpp <- '
 typedef Eigen::Map<Eigen::MatrixXd>   MapMatd;
 const MapMatd    B(as<MapMatd>(BB));
 const MapMatd    C(as<MapMatd>(CC));
+return wrap(B * C);
+'
+
+crossprodCpp <- '
+typedef Eigen::Map<Eigen::MatrixXd>   MapMatd;
+const MapMatd    B(as<MapMatd>(BB));
+const MapMatd    C(as<MapMatd>(CC));
 return wrap(B.transpose() * C);
 '
 
-fprod <- cxxfunction(signature(BB = "matrix", CC = "matrix"), prodCpp, "RcppEigen")
+prod2 <- cxxfunction(signature(BB="matrix", CC="matrix"),
+   prodCpp, "RcppEigen")
+crossprod2 <- cxxfunction(signature(BB="matrix", CC="matrix"),
+   crossprodCpp, "RcppEigen")
 

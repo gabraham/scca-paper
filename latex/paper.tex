@@ -17,7 +17,7 @@
 
 \subtitle{Genetics and population analysis}
 
-\title[Fast SCCA]{Fast sparse canonical correlation analysis with flashpca}
+\title[Fast SCCA]{Flashpca: Fast sparse canonical correlation analysis of genomic data}
 \author[Sample \textit{et~al}.]{Gad Abraham\,$^{\text{\sfb 1,2}*}$
 and Michael Inouye\,$^{\text{\sfb 1,2}}$}
 \address{$^{\text{\sf 1}}$ Centre for Systems Genomics, School of
@@ -49,37 +49,37 @@ the standalone commandline tool \texttt{flashpca}.\\
 
 \section{Introduction}
 
-Canonical correlation analysis (CCA) is a well-known statistical approach
-for multivariate analysis of two datasets~\citep{Hotelling1936}, such as
-genotype data (single nucleotide polymorphisms, SNPs) and multiple phenotypes
-such as gene expression levels. Approaches that consider one SNP at a time
-together with multiple phenotypes have been shown to increase power to
-detect QTLs over the simpler but often-used single-SNP/single-phenotype
+Canonical correlation analysis (CCA) is a well-known statistical approach for
+multivariate analysis of two datasets~\citep{Hotelling1936}. In the context of
+large-scale genomics and multi-omic data, CCA can prove useful in identifying
+relationships amongst complex data, for example single nucleotide polymorphisms
+(SNPs) and gene expression levels. Approaches that consider one SNP at a time
+together with multiple phenotypes have been shown to increase power to detect
+QTLs over the simpler but commonly utilised single-SNP/single-phenotype
 approach~\citep{Ferreira2009,Inouye2012}, particularly when analysing
-correlated phenotypes that are modulated by the same genetic variation.
+correlated phenotypes that are modulated by the same genetic variants.
 
-Analysis of multiple SNPs at a time is a natural extension of the
-single-SNP multiple-phenotype approach, however, standard CCA is not
-well-defined when the number of samples is lower than the number of
-SNPs or phenotypes ($n<\min\{p, m\}$).  One solution is Sparse CCA
-(SCCA)~\citep{Witten2009c,Witten2009b,Parkhomenko2009}, an $L_1$-penalised
-variant of CCA which allow for tuning the number of variables that
-effectively contribute to the canonical correlation, thus making the problem
-well-defined. Owing to the induced sparsity, SCCA can be useful for identifying
-a small subset of SNPs and a small subset of the phenotypes exhibiting strong
-correlations.  However, the rapidly increasing size and coverage of genotyping
-arrays (exacerbated by genotype imputation), together with the availability
-of large phenotypic datasets (transcriptomic, metabolomic, and others; e.g.,
-\citet{Bartel2015,TheGTExConsortium2015}), makes it challenging to perform
-analyses such as SCCA using existing tools.
+Analysis of multiple SNPs simultaneously is an attractive extension
+of the single-SNP multiple-phenotype approach, however, standard CCA
+is not well-defined when the number of samples is lower than the
+number of SNPs or phenotypes ($n<\min\{p, m\}$).  One solution is
+Sparse CCA (SCCA)~\citep{Witten2009c,Witten2009b,Parkhomenko2009},
+an $L_1$-penalised variant of CCA which allow for tuning the number of
+variables that effectively contribute to the canonical correlation, thus
+making the problem well-defined. Owing to the induced sparsity, SCCA can
+be useful for identifying a small subset of SNPs and a small subset of the
+phenotypes exhibiting strong correlations.  However, the rapidly increasing
+size and coverage of genotyping arrays (exacerbated by genotype imputation),
+together with the availability of large phenotypic datasets (transcriptomic,
+metabolomic, and others; e.g., \citet{Bartel2015,TheGTExConsortium2015}),
+makes it challenging to perform analyses such as SCCA using existing tools.
 
-We have developed an efficient implementation of SCCA that is capable
-of analysing genome-wide SNP datasets (1M SNPs or more), together with
-thousands of phenotypes (such as gene expression levels), as part of the
-tool \texttt{flashpca}~\citep{Abraham2014}. The main code is implemented
-in \textsf{C++} using the Eigen~3 numerical library~\citep{eigenweb},
-and an \textsf{R} interface (package \texttt{flashpcaR}) is available via
-RcppEigen~\citep{Bates2013}.
+We have developed an efficient implementation of SCCA that is
+capable of analysing genome-wide SNP datasets (1 million SNPs
+or more) together with thousands of phenotypes, as part of the tool
+\texttt{flashpca}~\citep{Abraham2014}. The tool is implemented in \textsf{C++}
+using the Eigen~3 numerical library~\citep{eigenweb}, as well as an \textsf{R}
+interface (package \texttt{flashpcaR}) based on RcppEigen~\citep{Bates2013}.
 
 Here, we compare the SCCA implementation in \texttt{flashpcaR} and
 \texttt{flashpca} with a widely-used implementation (\texttt{PMA},
@@ -153,13 +153,13 @@ expression levels as phenotypes.
 
 \section{Results}
 
-To demonstrate our tool we utilised the HapMap3 phase III
-genotypes~\citep{hapmap2010}, together with gene expression data of~\nindiv
-individuals~\citep{Stranger2012}, with~1.4M SNPs and~47,000 gene expression
-probes (out of which 21,800 probes were analysed by~\citet{Stranger2012} and
-used in our analysis). After quality control (see Supplementary Material),
-our data consisted of~\nindiv individuals, \nsnps SNPs, and~\ngenes gene
-expression probes.
+We utilised the HapMap3 phase III genotypes~\citep{hapmap2010}, together with
+gene expression data of~\nindiv individuals~\citep{Stranger2012}, with~1.4M
+SNPs and~47,000 gene expression probes (out of which~21,800 probes were
+analysed by~\citet{Stranger2012} and used in our analysis). After quality
+control (see Supplementary Material) and taking the intersection of post-QC
+SNPs within each population, the data consisted of~\nindiv individuals,
+\nsnps SNPs, and~\ngenes gene expression probes.
 
 We first confirmed that \texttt{flashpcaR::scca} produced models comparable
 with \texttt{PMA::CCA}, by comparing the results in cross-validation on HapMap3
@@ -180,19 +180,21 @@ respectively.  Note that runtime is not monotonic in the number of
 SNPs/phenotypes, since the number of iterations to convergence is affected
 by factors including LD structure.  The commandline \texttt{flashpca} was
 faster than \texttt{PMA::CCA} as well, and completed an analysis of~\nindiv
-individuals, \nsnps SNPs and~\ngenes gene expression levels in median
-wall time of ${\sim}74$s (including all overheads), using~${\sim}10$GiB
-of RAM. Note that cross-validation over a grid of penalties will increase
-these times considerably, in which case parallelisation over several cores
-is recommended (Supplementary Material).\vspace*{-12pt}
+individuals, \nsnps SNPs and~\ngenes gene expression levels in median wall time
+of ${\sim}74$s (including all overheads), using~${\sim}10$GiB of RAM. Note
+that cross-validation over a grid of penalties will increase these times
+considerably, in which case we recommend parallelisation over several cores
+(Supplementary Material).\vspace*{-12pt}
 
 \section{Conclusion}
 
 \texttt{flashpca} provides a fast implementation of sparse canonial correlation
 analysis, making it possible to rapidly analyse high dimensional datasets.
-For datasets too large to fit in \textsf{R}, the commandline tool is
-available as well, enabling large QTL analyses of~${>}1$M SNPs and thousands
-of phenotypes.\vspace*{-12pt}
+\texttt{flashpca} is available both as an \textsf{R} package, which enables
+analysis of metabolomic, transcriptomic, or any other quantitative set
+of measurements. For the case of large SNP datasets too large to fit in
+\textsf{R}, the commandline tool is available as well, enabling large QTL
+analyses of~${>}1$M SNPs and thousands of phenotypes.\vspace*{-12pt}
 
 \section*{Funding}
 

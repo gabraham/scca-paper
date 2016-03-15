@@ -23,8 +23,9 @@ E.pn <- foreach(n=levels(pop), .combine="rbind") %dopar% {
       Pc <- as.matrix(read.table(paste0("eigenvectors_", n, ".txt"), header=FALSE,
          sep=""))
       fam <- read.table(
-         paste0("hapmap3_r2_b36_fwd.consensus.qc.poly_founders_filtered_",
-            n, "_thinned.fam"), header=FALSE, sep="", stringsAsFactors=FALSE)
+	 paste0("PCA/hapmap3_r3_b36_fwd.", n,
+	    ".qc.poly.filtered.wexpr_thinned.fam"),
+	 header=FALSE, sep="", stringsAsFactors=FALSE)
       rownames(Pc) <- fam[,2]
       nm <- names(pop[pop == n])
       Pc2 <- Pc[fam[,2] %in% nm, ]

@@ -2,9 +2,8 @@
 rm(list=ls())
 graphics.off()
 
-# Ensure the correct flashpcaR package is used
-library(devtools)
-install_url("file://flashpcaR_1.2.6.tar.gz", subdir=".")
+# v1.2.6 is first version to support initialisation of the V matrix in scca
+stopifnot(packageVersion("flashpcaR") >= "1.2.6")
 
 library(flashpcaR)
 library(PMA)
@@ -45,7 +44,7 @@ res <- lapply(nsnps, function(n) {
 
       cat(n, p, "\n")
 
-      K <- fprod(Es, Gs)
+      K <- crossprod2(Es, Gs)
       f <- flashpca(K, ndim=50, verbose=FALSE, stand="none", check_geno=FALSE)
       Vinit1 <- f$vectors[,1]
       Vinit2 <- rnorm(ncol(Es))
@@ -101,7 +100,7 @@ d2 <- read.table(pipe("wc -l *chr*.bim"), header=FALSE, sep="",
    stringsAsFactors=FALSE)
 d2 <- d2[grepl("\\.bim", d2$V2), ]
 d2$label <- gsub(
-   "hapmap3_r2_b36_fwd\\.consensus\\.qc\\.poly_founders_filtered_chr|\\.bim",
+   "hapmap3_r2_b36_fwd\\.consensus\\.qc\\.poly.filtered.wexpr_chr|\\.bim",
    "", d2$V2)
 colnames(d2)[1:2] <- c("nsnps", "file")
 colnames(d1)[1:2] <- c("logfile", "time")
@@ -125,7 +124,7 @@ d2 <- read.table(pipe("wc -l *chr*.bim"), header=FALSE, sep="",
    stringsAsFactors=FALSE)
 d2 <- d2[grepl("\\.bim", d2$V2), ]
 d2$label <- gsub(
-   "hapmap3_r2_b36_fwd\\.consensus\\.qc\\.poly_founders_filtered_chr|\\.bim",
+   "hapmap3_r2_b36_fwd\\.consensus\\.qc\\.poly.filtered.wexpr_chr|\\.bim",
    "", d2$V2)
 colnames(d2)[1:2] <- c("nsnps", "file")
 colnames(d1)[1:2] <- c("logfile", "time")
