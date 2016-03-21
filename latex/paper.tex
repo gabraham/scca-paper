@@ -63,7 +63,7 @@ Analysis of multiple SNPs simultaneously is an attractive extension
 of the single-SNP multiple-phenotype approach, however, standard
 CCA is not well-defined when the number of samples is lower than the
 number of SNPs or phenotypes ($n{<}\min\{p, m\}$).  One solution is
-Sparse CCA (SCCA)~\citep{Witten2009c,Witten2009b,Parkhomenko2009},
+Sparse CCA (SCCA)~\citep{Witten2009cshort,Witten2009bshort,Parkhomenko2009},
 an $L_1$-penalised variant of CCA which allow for tuning the number of
 variables that effectively contribute to the canonical correlation, thus
 making the problem well-defined. Owing to the induced sparsity, SCCA can
@@ -83,8 +83,8 @@ interface (package \texttt{flashpcaR}) based on RcppEigen~\citep{Bates2013}.
 
 Here, we compare the SCCA implementation in \texttt{flashpcaR} and
 \texttt{flashpca} with a widely-used implementation (\texttt{PMA},
-by~\citet{Witten2013}), and demonstrate the substantial improvements in
-speed of our tool, allowing for large analyses to be performed rapidly.
+by~\citet{Witten2013short}), and demonstrate the substantial improvements
+in speed of our tool, allowing for large analyses to be performed rapidly.
 
 \vspace*{-12pt}
 \begin{methods}
