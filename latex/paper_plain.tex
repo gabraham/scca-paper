@@ -1,0 +1,82 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\geometry{
+   includeheadfoot,
+   margin=2.54cm
+}
+
+\hypersetup{
+   pdftitle={},
+   pdfauthor={Gad Abraham},
+   colorlinks=true,
+   citecolor=black,
+   filecolor=black,
+   linkcolor=black,
+   urlcolor=black
+}
+
+\newcommand{\copyrightyear}{}
+\newcommand{\pubyear}{}
+\newcommand{\access}{}
+\newcommand{\appnotes}{}
+\newcommand{\firstpage}{}
+\newcommand{\subtitle}{}
+\newcommand{\sfb}{\sf \bf}
+\newcommand{\address}{}
+\newcommand{\corresp}{}
+\newcommand{\history}{}
+\newcommand{\editor}{}
+\renewcommand{\href}[2]{\url{#1}}
+\newenvironment{methods}{}{}
+
+\newcommand{\figwidthp}{0.7}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\s}{\mathbf{\Sigma}}
+
+\title{FlashPCA: fast sparse canonical correlation analysis of genomic data}
+
+\author{Gad Abraham\,$^{\text{1,2}}$
+and Michael Inouye\,$^{\text{1,2}}$\\
+$^{\text{1}}$Centre for Systems Genomics, School of
+BioSciences,\\
+University of Melbourne, Parkville 3010, VIC, Australia. \\
+$^{\text{2}}$Department of Pathology,
+\\Faculty of Medicine, Dentistry, and
+Health Sciences,\\University of Melbourne,\\ Parkville 3010, VIC, Australia.}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+\textbf{Summary:} Sparse canonical correlation analysis (SCCA) is a
+useful approach for correlating one set of measurements, such as single
+nucleotide polymorphisms (SNPs), with another set of measurements, such as gene
+expression levels.  We present a fast implementation of SCCA, enabling rapid
+analysis of hundreds of thousands of SNPs together with thousands of phenotypes.
+Our approach is implemented both as an R package \texttt{flashpcaR} and within
+the standalone commandline tool \texttt{flashpca}.\\
+\textbf{Availability and implementation:}
+\href{https://github.com/gabraham/flashpca}{https://github.com/gabraham/flashpca}
+\\ \textbf{Contact:}
+\href{gad.abraham@unimelb.edu.au}{gad.abraham@unimelb.edu.au}
+\end{abstract}
+
+\input{numbers.tex}
+
+\input{text.tex}
+
+\bibliographystyle{unsrtnat}
+\bibliography{paper}
+
+\end{document}
+

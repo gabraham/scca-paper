@@ -1,5 +1,6 @@
 PAPER=paper
 SUPP=supplementary
+PAPER_PLAIN=paper_plain
 
 full: ${PAPER}.pdf ${SUPP}.pdf
 
@@ -14,6 +15,12 @@ ${PAPER}.pdf: ${PAPER}.tex ${PAPER}.bib scca_timing-crop.pdf
 	bibtex ${PAPER}
 	pdflatex ${PAPER}
 	pdflatex ${PAPER}	
+
+${PAPER_PLAIN}.pdf: ${PAPER_PLAIN}.tex ${PAPER}.bib scca_timing-crop.pdf 
+	pdflatex ${PAPER_PLAIN}
+	bibtex ${PAPER_PLAIN}
+	pdflatex ${PAPER_PLAIN}
+	pdflatex ${PAPER_PLAIN}	
 
 ${SUPP}.pdf: ${SUPP}.tex ${PAPER}.bib scca_timing_full-crop.pdf
 	pdflatex ${SUPP}

@@ -9,7 +9,7 @@ type $PLINK >/dev/null 2>&1 || {
    echo >&2 "plink is not available; set PLINK variable in 02pca.sh script or fix path"
    exit 1
 }
-type $FPCA >/dev/null 2>&1 || { 
+type $FPCA >/dev/null 2>&1 || {
    echo >&2 "flashpca is not available; set FPCA variable in 02pca.sh script or fix path"
    exit 1
 }
