@@ -20,7 +20,7 @@ E.pn <- foreach(n=levels(pop), .combine="rbind") %dopar% {
 
    En <- E[pop == n, ]
    if(n %in% pn) {
-      Pc <- as.matrix(read.table(paste0("eigenvectors_", n, ".txt"), header=FALSE,
+      Pc <- as.matrix(read.table(paste0("PCA/eigenvectors_", n, ".txt"), header=FALSE,
          sep=""))
       fam <- read.table(
 	 paste0("PCA/hapmap3_r3_b36_fwd.", n,

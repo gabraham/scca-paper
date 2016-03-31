@@ -2,8 +2,17 @@
 
 set -e
 
-PLINK=~/Software/plink-ng/2015-12-24/plink
-FPCA=~/Code/flashpca/flashpca_x86-64
+PLINK=plink
+FPCA=flashpca
+
+type $PLINK >/dev/null 2>&1 || {
+   echo >&2 "plink is not available; set PLINK variable in 02pca.sh script or fix path"
+   exit 1
+}
+type $FPCA >/dev/null 2>&1 || { 
+   echo >&2 "flashpca is not available; set FPCA variable in 02pca.sh script or fix path"
+   exit 1
+}
 
 mkdir PCA
 pushd PCA
@@ -16,7 +25,7 @@ do
    eval $PLINK \
       --bfile $ROOT \
       --indep-pairwise 1000 50 0.1 \
-      --exclude range ~/Code/flashpca/exclusion_regions.txt \
+      --exclude range ~/Code/flashpca/exclusion_regions_hg19.txt \
       --out ${pop}
 
    eval $PLINK \

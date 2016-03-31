@@ -4,8 +4,18 @@ set -e
 
 ROOT=../data/hapmap3_r2_b36_fwd.qc.poly/hapmap3_r3_b36_fwd.qc.poly.filtered.wexpr
 
-PLINK=~/Software/plink-ng/2015-12-24/plink
-FPCA=~/Code/flashpca/flashpca_x86-64
+PLINK=plink
+FPCA=flashpca
+
+type $PLINK >/dev/null 2>&1 || {
+   echo >&2 "plink is not available; set PLINK variable in 06big_timing.sh script or fix path"
+   exit 1
+}
+type $FPCA >/dev/null 2>&1 || { 
+   echo >&2 "flashpca is not available; set FPCA variable in 06big_timing.sh script or fix path"
+   exit 1
+}
+
 
 EXPR1=expression_standardised.txt
 EXPR2=expression_standardised_10000.txt
@@ -15,7 +25,6 @@ nreps=30
 # Subset of genes
 awk '{for(i=1;i<10002;i++){printf "%s ", $i} print $10002}' $EXPR1 > $EXPR2
 
-#CHR=$(seq 2 5 22)
 CHR=$(seq 2 22)
 
 for expr in $EXPR1 $EXPR2
