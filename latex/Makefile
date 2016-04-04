@@ -7,20 +7,27 @@ full: ${PAPER}.pdf ${SUPP}.pdf
 scca_timing-crop.pdf: ../code/scca_timing.pdf
 	pdfcrop ../code/scca_timing.pdf scca_timing-crop.pdf
 
+scca_timing-crop.eps: scca_timing-crop.pdf
+	pdftops scca_timing-crop.pdf scca_timing-crop.eps
+
 scca_timing_full-crop.pdf: ../code/scca_timing_full.pdf
 	pdfcrop ../code/scca_timing_full.pdf scca_timing_full-crop.pdf
 
-${PAPER}.pdf: ${PAPER}.tex ${PAPER}.bib scca_timing-crop.pdf 
-	pdflatex ${PAPER}
+${PAPER}.pdf: ${PAPER}.tex ${PAPER}.bib scca_timing-crop.eps
+	latex ${PAPER}
 	bibtex ${PAPER}
-	pdflatex ${PAPER}
-	pdflatex ${PAPER}	
+	latex ${PAPER}
+	latex ${PAPER}	
+	dvips ${PAPER}.dvi
+	ps2pdf ${PAPER}.ps
 
 ${PAPER_PLAIN}.pdf: ${PAPER_PLAIN}.tex ${PAPER}.bib scca_timing-crop.pdf 
-	pdflatex ${PAPER_PLAIN}
+	latex ${PAPER_PLAIN}
 	bibtex ${PAPER_PLAIN}
-	pdflatex ${PAPER_PLAIN}
-	pdflatex ${PAPER_PLAIN}	
+	latex ${PAPER_PLAIN}
+	latex ${PAPER_PLAIN}	
+	dvips ${PAPER_PLAIN}.dvi
+	ps2pdf ${PAPER_PLAIN}.ps
 
 ${SUPP}.pdf: ${SUPP}.tex ${PAPER}.bib scca_timing_full-crop.pdf
 	pdflatex ${SUPP}
