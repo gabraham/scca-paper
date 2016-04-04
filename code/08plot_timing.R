@@ -65,6 +65,7 @@ res3 <- rbind(res2, d[, vn], d10k[, vn])
 
 res3$method <- sapply(strsplit(as.character(res3$expr), "_"), head, n=1)
 res3$init <- sapply(strsplit(as.character(res3$expr), "_"), tail, n=1)
+res3$expr <- factor(as.character(res3$expr))
 
 ################################################################################
 # Plotting
@@ -89,6 +90,7 @@ scale_y_log2 <- function(...)
 {
    scale_y_continuous(..., trans=scales::log_trans(2))
 }
+
 
 
 g <- ggplot(res4, aes(x=nsnps, y=median, colour=method, shape=factor(npheno)))

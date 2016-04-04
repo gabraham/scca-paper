@@ -1,15 +1,16 @@
 
 \section{Introduction}
 
-Canonical correlation analysis (CCA) is a well-known statistical approach for
-multivariate analysis of two datasets~\citep{Hotelling1936}. In the context of
-large-scale genomics and multi-omic data, CCA can prove useful in identifying
-relationships amongst complex data, for example single nucleotide polymorphisms
-(SNPs) and gene expression levels. Approaches that consider one SNP at a time
-together with multiple phenotypes have been shown to increase power to detect
-QTLs over the simpler but commonly utilised single-SNP/single-phenotype
-approach~\citep{Ferreira2009,Inouye2012}, particularly when analysing
-correlated phenotypes that are modulated by the same genetic variants.
+Canonical correlation analysis (CCA) is a well-known statistical approach
+for multivariate analysis of two datasets~\citep{Hotelling1936}. In the
+context of large-scale genomic and multi-omic analyses, CCA can prove useful
+in identifying relationships amongst complex data, for example single
+nucleotide polymorphisms (SNPs) and gene expression levels. Approaches
+that consider one SNP at a time together with multiple phenotypes have
+been shown to increase power to detect QTLs over the simpler but commonly
+utilised single-SNP/single-phenotype approach~\citep{Ferreira2009,Inouye2012},
+particularly when analysing correlated phenotypes that are modulated by the
+same genetic variants.
 
 Analysis of multiple SNPs simultaneously is an attractive extension of
 the single-SNP multiple-phenotype approach, however, standard CCA is
@@ -56,8 +57,8 @@ canonical variables $a$ and $b$, CCA involves solving the problem
 where $\s_{XX}$ and $\s_{YY}$ are the covariance matrices of
 $\mathbf{X}$ and $\mathbf{Y}$, respectively, and $\s_{XY}$ is the
 covariance matrix of $\mathbf{X}$ and $\mathbf{Y}$. The solution is given by
-the singular value decomposition (SVD) of $\s_{XX}^{-1/2} \s_{XX}
-\s_{XY}^{-1/2}$, with $a = \s_{XX}^{-1/2} u_1$ and $b =
+the singular value decomposition (SVD) of $\s_{XX}^{-1/2} \s_{XY}
+\s_{YY}^{-1/2}$, with $a = \s_{XX}^{-1/2} u_1$ and $b =
 \s_{YY}^{-1/2} v_1$, where $u_1$ and $v_1$ are the first left and right
 singular vectors, respectively.
 
@@ -134,9 +135,9 @@ individuals, \nsnps SNPs and~\ngenes gene expression levels in median wall
 time of ${\sim}47$s (including all overheads), using~${\sim}10$GiB of RAM.
 Note that runtime for the commandline \texttt{flashpca} includes all steps
 such as loading data into RAM, unlike the \textsf{R} version where the data
-is pre-loaded.  Performing cross-validation over a grid of penalties will
-increase these times considerably, in which case we recommend parallelisation
-over several cores (Supplementary Material).\vspace*{-12pt}
+is pre-loaded into \textsf{R}.  Performing cross-validation over a grid of
+penalties will increase these times considerably, in which case we recommend
+parallelisation over several cores (Supplementary Material).\vspace*{-12pt}
 
 \section{Conclusion}
 
@@ -146,7 +147,7 @@ SCCA is available in the \textsf{R} package \texttt{flashpcaR}, which enables
 analysis of metabolomic, transcriptomic, or any other quantitative set of
 measurements. The commandline version is targeted at SNP/phenotype data,
 enabling large QTL analyses of~${>}1$ million SNPs and thousands of phenotypes,
-that would otherwise be too large to fit in \textsf{R}.\vspace*{-12pt}
+that would otherwise be too large to fit within \textsf{R}.\vspace*{-12pt}
 
 \section*{Funding}
 
