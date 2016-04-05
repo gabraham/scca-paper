@@ -1,5 +1,6 @@
 \documentclass[a4paper,10pt]{scrartcl}
 
+\usepackage{microtype}
 \usepackage{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -54,7 +55,7 @@ in~\nindiv individuals in total. In addition, within each population, we
 excluded non-autosomal SNPs, SNPs with MAF~${<}1\%$, missingness~${>}10\%$,
 and deviation from Hardy-Weinberg equilibrium~$P{<}10^{-6}$ using
 PLINK~1.9~\citep{purcell2007,Chang2015}.  Finally, we combined all eight
-population into one dataset, consisting of the post-QC autosomal SNPs within
+populations into one dataset, consisting of the post-QC autosomal SNPs within
 each dataset, a total of~\nsnps SNPs.
 
 In the analysis, any remaining missing genotypes were randomly imputed
@@ -62,8 +63,8 @@ according to the frequencies of the non-missing observations (equivalent on
 average to mean imputation).
 
 For the gene expression data, we used a subset consisting of the~21,800 probes
-that were analysed by~\citep{Stranger2012}, utilising the original authors'
-normalised data. Following~\citep{Stranger2012}, we performed PCA on the
+that were analysed by~\citet{Stranger2012}, utilising the original authors'
+normalised data. Following~\citet{Stranger2012}, we performed PCA on the
 genotypes within each population, and for the GIH, MEX, MKK, and LWK regressed
 out~10 PCs of the genotypes (as well as intercept) from the corresponding gene
 expression levels, in order to adjust for the higher levels of admixture within

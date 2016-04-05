@@ -1,5 +1,6 @@
 \documentclass[a4paper,10pt]{scrartcl}
 
+\usepackage{microtype} % nicer spacing, apparently
 \usepackage{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -36,10 +37,15 @@
 \renewcommand{\href}[2]{\url{#1}}
 \newenvironment{methods}{}{}
 
+\newcommand{\citeeigen}{\citep{eigenweb}}
+
 \newcommand{\figwidthp}{0.7}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\s}{\mathbf{\Sigma}}
+
+% to prevent certain citations and words spilling over into margin
+\sloppy
 
 \title{FlashPCA: fast sparse canonical correlation analysis of genomic data}
 
